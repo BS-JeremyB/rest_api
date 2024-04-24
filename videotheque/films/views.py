@@ -2,11 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import *
 from .serializers import *
 
 # Create your views here.
 class RealisateurList(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, format=None):
         realisateurs = Realisateur.objects.all()
@@ -14,9 +16,6 @@ class RealisateurList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
-        if not request.user.is_authenticated:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        
         serializer = RealisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,6 +24,8 @@ class RealisateurList(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
 class RealisateurDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get_object(self,id):
         try:
             return Realisateur.objects.get(id=id)
@@ -52,8 +53,11 @@ class RealisateurDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class FilmList(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, format=None):
+        # if not request.user.is_authenticated:
+        #     return Response(status=status.HTTP_403_FORBIDDEN)
         films = Film.objects.all()
         serializer = FilmSerializer(films, many=True)
         return Response(serializer.data)
@@ -67,6 +71,7 @@ class FilmList(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
 class FilmDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     def get_object(self, id):
         try:
             return Film.objects.get(id=id)
