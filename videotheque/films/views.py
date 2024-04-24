@@ -1,91 +1,89 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .models import *
 from .serializers import *
 
 # Create your views here.
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def realisateur_list(request):
 
     if request.method == 'GET':
         realisateurs = Realisateur.objects.all()
         serializer = RealisateurSerializer(realisateurs, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
     
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = RealisateurSerializer(data=data)
+        serializer = RealisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        return JsonResponse(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
-@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
 def realisateur_detail(request, id):
     try:
         realisateur = Realisateur.objects.get(id=id)
     except Realisateur.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
 
     if request.method == 'GET':
         serializer = RealisateurSerializer(realisateur)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = RealisateurSerializer(instance=realisateur, data=data)
+        serializer = RealisateurSerializer(instance=realisateur, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
+            return Response(serializer.data)
         
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         realisateur.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def film_list(request):
 
     if request.method == 'GET':
         films = Film.objects.all()
         serializer = FilmSerializer(films, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-
+        return Response(serializer.data)
+    
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = FilmSerializer(data=data)
+        serializer = FilmSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@csrf_exempt
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
 def film_detail(request, id):
     try:
         film = Film.objects.get(id=id)
     except Film.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
 
     if request.method == 'GET':
         serializer = FilmSerializer(film)
-        return JsonResponse(serializer.data)
-
+        return Response(serializer.data)
+    
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = FilmSerializer(instance=film, data=data)
+        serializer = FilmSerializer(instance=film, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         film.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
