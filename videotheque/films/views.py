@@ -14,6 +14,9 @@ class RealisateurList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
         serializer = RealisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
