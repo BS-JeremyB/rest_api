@@ -1,31 +1,26 @@
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets
 from .models import *
 from .serializers import *
 
 # Create your views here.
-class RealisateurList(generics.ListCreateAPIView):
+class RealisateurViewSet(viewsets.ModelViewSet):
 
     queryset = Realisateur.objects.all()
     serializer_class = RealisateurSerializer
 
-    
-class RealisateurDetail(generics.RetrieveUpdateDestroyAPIView):
+    # def get_permissions(self):
+    #     if self.action == 'destroy':
+    #         return [IsAuthenticated()]
+    #     return [AllowAny()]
 
-    queryset = Realisateur.objects.all()
-    serializer_class = RealisateurSerializer
- 
+  
 
-
-class FilmList(generics.ListCreateAPIView):
+class FilmViewSet(viewsets.ModelViewSet):
     
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
     
-class FilmDetail(generics.RetrieveUpdateDestroyAPIView):
 
-    queryset = Film.objects.all()
-    serializer_class = FilmSerializer
-    
 
         
