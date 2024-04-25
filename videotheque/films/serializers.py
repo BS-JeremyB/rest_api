@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from .models import *
+from .models import Realisateur, Film
 
 class RealisateurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Realisateur
         fields = '__all__'
 
+from rest_framework import serializers
+from .models import *
+
+class RealisateurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Realisateur
+        fields = '__all__'
 
 class FilmSerializer(serializers.ModelSerializer):
     realisateur_id = serializers.PrimaryKeyRelatedField(
@@ -14,13 +21,13 @@ class FilmSerializer(serializers.ModelSerializer):
         write_only=True,
         source='realisateur'
     )
-    realisateurs = RealisateurSerializer(
+    realisateur = serializers.HyperlinkedRelatedField(
         many=True,
-        read_only =True,
-        source='realisateur'
+        read_only=True,
+        view_name='detail_realisateur'
     )
 
     class Meta:
         model = Film
-        fields = ['id','titre','annee_sortie','realisateurs', 'realisateur_id','num_exploitation']
+        fields = ['id', 'titre', 'annee_sortie', 'realisateur', 'realisateur_id', 'num_exploitation']
 
