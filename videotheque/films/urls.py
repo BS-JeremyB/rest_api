@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('realisateur/', views.RealisateurList.as_view(), name='liste_realisateur'),
-    path('realisateur/<int:pk>/', views.RealisateurDetail.as_view(), name='detail_realisateur'),
-    path('film/', views.FilmList.as_view(), name='liste_film'),
-    path('film/<int:pk>/', views.FilmDetail.as_view(), name='detail_film'),
+    path('realisateur/', views.RealisateurList.as_view(), name='realisateur-list'),
+    path('realisateur/<int:pk>/', views.RealisateurDetail.as_view(), name='realisateur-detail'),
+    path('film/', views.FilmList.as_view(), name='film-list'),
+    path('film/<int:pk>/', views.FilmDetail.as_view(), name='film-detail'),
 ]
