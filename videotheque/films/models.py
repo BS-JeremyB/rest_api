@@ -15,6 +15,7 @@ class Film(models.Model):
     annee_sortie = models.IntegerField()
     realisateur = models.ManyToManyField(Realisateur)
     num_exploitation = models.IntegerField(unique=True)
+    affiche = models.ImageField(upload_to='affiches/', null=True, blank=True)
 
     def __str__(self):
         return self.titre
